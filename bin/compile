@@ -42,19 +42,21 @@ mkdir -p $build_dir/node_modules
 status "Installing buildpack dependencies"
 npm install harp@0.12.1
 
-# Detect existing GOINSTANT_CONNECT_URL
-GOINSTANT_CONNECT_URL=$(json -f $build_dir/harp.json | globals.GOINSTANT_CONNECT_URL)
-
-# Has existing GOINSTANT_CONNECT_URL, skip harp.json modifications
-if [ $GOINSTANT_CONNECT_URL ]; then
-  status "Skipping harp.json modification"
-
 # Append GOINSTANT_CONNECT_URL to harp.json globals
-elif [ -f "$build_dir/harp.json" ]; then
+if [ -f "$build_dir/harp.json" ]; then
   npm install -g jsontool@7.0.2
-  status "Injecting GOINSTANT_CONNECT_URL"
-  HARP_JSON=$(json -f $build_dir/harp.json -E "this.globals.GOINSTANT_CONNECT_URL=\"$GOINSTANT_CONNECT_URL\"")
-  echo $HARP_JSON > $build_dir/harp.json
+
+  # Detect existing GOINSTANT_CONNECT_URL
+  GOINSTANT_CONNECT_URL=$(json -f $build_dir/harp.json | globals.GOINSTANT_CONNECT_URL)
+
+  # Has existing GOINSTANT_CONNECT_URL, skip harp.json modifications
+  if [ $GOINSTANT_CONNECT_URL ]; then
+    status "Skip GOINSTANT_CONNECT_URL injection"
+  else
+    status "Injecting GOINSTANT_CONNECT_URL"
+    HARP_JSON=$(json -f $build_dir/harp.json -E "this.globals.GOINSTANT_CONNECT_URL=\"$GOINSTANT_CONNECT_URL\"")
+    echo $HARP_JSON > $build_dir/harp.json
+  fi
 
 # Generate a new harp.json file with globals
 else
