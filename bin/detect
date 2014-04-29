@@ -8,12 +8,13 @@ if [ -d "$env_dir" ]; then
   export_env_dir $env_dir
 fi
 
-$BUILDPACK='GoInstant/Harp'
-
+# Accept existing HARP_ROOT or harp.json file
 if [ $HARP_ROOT ] || [ -f $1/harp.json ] ; then
-  echo "$BUILDPACK" && exit 0
+  echo "Harp" && exit 0
+
+# Detect public directory index, autogenerate harp.json
 elif [ -f $1/public/index.ejs ] || [ -f $1/public/index.jade ] ; then
-  echo "$BUILDPACK" && exit 0
+  echo "Harp" && exit 0
 else
   echo "no" && exit 1
 fi
