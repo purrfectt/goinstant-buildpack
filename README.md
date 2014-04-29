@@ -3,6 +3,10 @@ goinstant-buildpack
 
 Heroku buildpack for [GoInstant](https://goinstant.com) applications (served with [Harp](https://github.com/sintaxi/harp)).
 
+### What does it do?
+
+Serve your static website and automatically include your [GoInstant](https://goinstant.com) connect url.
+
 ### Fork the Example
 
 Why read about it when you can just get to using it? [Fork the example](https://github.com/jeffandersen/goinstant-buildpack-example).
